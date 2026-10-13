@@ -18,7 +18,8 @@ public class ExampleTeleop extends OpMode {
     private Servo intakeServo;
     private DcMotor intakeMotor;
     private DcMotor launchWheel;
-    private boolean intakeOn = false;
+    private boolean servoIntakeOn = false;
+    private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
 
     @Override
@@ -67,16 +68,25 @@ public class ExampleTeleop extends OpMode {
         // Non-continuous servo positions must be set every loop
         stinger.setPosition(stingerTarget);
 
-        // Enable / disable the intake by pressing 'x'
+        // Enable / disable the intake motor by pressing 'x'
         if (gamepad1.xWasReleased()){
-            intakeOn = !intakeOn;
-            if (intakeOn){
-                // Continuous servos and motors just need the power set once
-                intakeServo.setPosition(1);
+            motorIntakeOn = !motorIntakeOn;
+            if (motorIntakeOn){
+                // Continuous motors just need the power set once
                 intakeMotor.setPower(1);
             }else{
-                intakeServo.setPosition(0.5);
                 intakeMotor.setPower(0);
+            }
+        }
+
+        // Enable / disable the intake servo by pressing 'b'
+        if (gamepad1.bWasReleased()){
+            servoIntakeOn = !servoIntakeOn;
+            if (servoIntakeOn){
+                // Continuous servos just need the power set once
+                intakeServo.setPosition(1);
+            }else{
+                intakeServo.setPosition(0.5);
             }
         }
 
