@@ -42,4 +42,10 @@ public class LibCommon {
             heading + Math.PI / 2
         );
     }
+
+    public enum Actions{
+        INIT,
+        TOGGLE_FIRE,
+        SHUTDOWN,
+    }
 }

@@ -11,17 +11,33 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Scheduler;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
+import org.firstinspires.ftc.teamcode.LibCommon;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
 public class JustPark extends OpMode {
 
     private Follower follower;
+    private Servo stinger;
+    private int stingerTarget = 0;
+    private Servo intakeServo;
+    private DcMotor intakeMotor;
+    private DcMotor launchWheel;
+    private boolean servoIntakeOn = false;
+    private boolean motorIntakeOn = false;
+    private boolean launcherOn = false;
     private final PoseFactory poseFactory = PoseFactory.degrees();
+    private final int[][] actions = new int[][]{
+            {2, 54, 180, LibCommon.Actions.INIT.ordinal()},
+            {27, 54, 180, -1},
+            {12, 2, 180, -1},
+    };
 
     // our poses
     private Pose[] poses;
@@ -36,15 +52,16 @@ public class JustPark extends OpMode {
 
     @Override
     public void init() {
-        poses = new Pose[]{
-                poseFactory.of(2, 54, 180),
-                poseFactory.of(27, 54, 180),
-                poseFactory.of(27, 30, 0),
-                poseFactory.of(27, 2, 0)
-        };
-//        poses.add(poseFactory.of(2, 54, 180));
-//        poses.add(poseFactory.of(42, 54, 0));
-//        poses.add(poseFactory.of(27, 16, 0));
+        poses = new Pose[actions.length];
+        for (int i = 0; i < actions.length; i++){
+            poses[i] = poseFactory.of(actions[i][0], actions[i][1], actions[i][2]);
+        }
+//        poses = new Pose[]{
+//                poseFactory.of(2, 54, 180),
+//                poseFactory.of(27, 54, 180),
+//                poseFactory.of(27, 30, 0),
+//                poseFactory.of(27, 2, 0)
+//        };
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(poses[0]);
@@ -72,6 +89,7 @@ public class JustPark extends OpMode {
 //        if (!follower.following() && poseIndex != poses.length){
 //            Scheduler.schedule(follow(follower, park()));
 //        }
+        telemetry.addData("completion: ", follower.completion());
         follower.update();
         Scheduler.execute();
     }

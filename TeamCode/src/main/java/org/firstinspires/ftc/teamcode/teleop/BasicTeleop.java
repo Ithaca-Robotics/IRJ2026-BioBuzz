@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -24,11 +25,14 @@ public class BasicTeleop extends OpMode {
     private boolean servoIntakeOn = false;
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
+    private final PoseFactory poseFactory = PoseFactory.degrees();
+    private final Pose starterPose = poseFactory.of(0, 0, 180);
 
     @Override
     public void init() {
         // Create a follower for PedroPathing
         follower = Constants.create(hardwareMap);
+        follower.setPose(starterPose);
 
         // Basic servo imports
         stinger = hardwareMap.get(Servo.class, "stinger");
