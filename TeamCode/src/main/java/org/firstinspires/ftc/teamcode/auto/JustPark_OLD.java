@@ -17,11 +17,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
-import org.firstinspires.ftc.teamcode.LibCommon;
+import org.firstinspires.ftc.teamcode.lib.LibCommon;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
-public class JustPark extends OpMode {
+public class JustPark_OLD extends OpMode {
 
     private Follower follower;
     private Servo stinger;

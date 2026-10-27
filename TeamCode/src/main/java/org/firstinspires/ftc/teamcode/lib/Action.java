@@ -1,0 +1,32 @@
+package org.firstinspires.ftc.teamcode.lib;
+
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+public abstract class Action {
+    private boolean running = true;
+    private double startTime;
+    private ElapsedTime timer = new ElapsedTime();
+    private double maxTime;
+
+    public Action(double time){
+        maxTime = time;
+    }
+    public boolean isFinished(){
+        return !running;
+    }
+    public void init(){
+        startTime = timer.milliseconds();
+    }
+    public double time(){
+        return timer.milliseconds() - startTime;
+    }
+    public void update(){
+        if (timer.milliseconds() - startTime > maxTime){
+            running = false;
+        }
+    }
+
+    public abstract void start();
+    public abstract void loop();
+    public abstract void end();
+}

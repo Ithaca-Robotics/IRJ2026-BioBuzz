@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static com.pedropathing.api.Paths.line;
+
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
+import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,7 +17,7 @@ import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.ManualDrive;
 
 @TeleOp
-public class BasicTeleop extends OpMode {
+public class SimpleTeleop extends OpMode {
 
     private Follower follower;
     private Servo stinger;
@@ -27,6 +30,14 @@ public class BasicTeleop extends OpMode {
     private boolean launcherOn = false;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final Pose starterPose = poseFactory.of(0, 0, 180);
+    // our poses
+    private Pose[] poses;
+    //    private final ArrayList<Pose> poses = new ArrayList<Pose>();
+    private int poseIndex = 0;
+
+    private Path park() {
+        return line(poses[poseIndex], poses[poseIndex + 1]).linear(poses[poseIndex], poses[poseIndex++ + 1]);
+    }
 
     @Override
     public void init() {

@@ -16,11 +16,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.LibCommon;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
-public class JustParkCorner extends OpMode {
+public class JustParkCorner_OLD extends OpMode {
 
     private Follower follower;
     private Servo stinger;
