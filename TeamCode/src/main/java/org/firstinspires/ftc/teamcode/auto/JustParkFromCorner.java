@@ -16,11 +16,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.LibCommon;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
-public class JustParkCorner extends OpMode {
+public class JustParkFromCorner extends OpMode {
 
     private Follower follower;
     private Servo stinger;
@@ -34,7 +33,7 @@ public class JustParkCorner extends OpMode {
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
             {2, 0, 180, -1},
-            {12, 2, 180, -1},
+            {15, 2, 180, -1},
     };
 
     // our poses
