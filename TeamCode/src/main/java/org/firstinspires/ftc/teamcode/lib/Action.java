@@ -11,17 +11,21 @@ public abstract class Action {
     public Action(double time){
         maxTime = time;
     }
+
     public boolean isFinished(){
         return !running;
     }
+
     public void init(){
         startTime = timer.milliseconds();
     }
+
     public double time(){
         return timer.milliseconds() - startTime;
     }
+
     public void update(){
-        if (timer.milliseconds() - startTime > maxTime){
+        if (time() > maxTime){
             running = false;
         }
     }

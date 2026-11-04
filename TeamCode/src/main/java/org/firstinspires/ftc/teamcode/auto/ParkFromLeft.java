@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.auto.JustPark;
+package org.firstinspires.ftc.teamcode.auto;
 
-import org.firstinspires.ftc.teamcode.lib.Action;
 import org.firstinspires.ftc.teamcode.lib.BasicAuto;
 
-public class JustParkNew extends BasicAuto {
+public class ParkFromLeft extends BasicAuto {
     @Override
     protected void setActions() {
         createAction(new int[] {2, 54, 180});
