@@ -19,6 +19,9 @@ public class BasicTeleop extends OpMode {
     private Follower follower;
     private Servo stinger;
     private int stingerTarget = 0;
+    private Servo rampServo0;
+    private Servo rampServo1;
+    private int rampTarget = 0;
     private Servo intakeServo;
     private DcMotor intakeMotor;
     private DcMotor launchWheel;
@@ -37,6 +40,8 @@ public class BasicTeleop extends OpMode {
         // Basic servo imports
         stinger = hardwareMap.get(Servo.class, "stinger");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
+        rampServo0 = hardwareMap.get(Servo.class, "rampServo0");
+        rampServo1 = hardwareMap.get(Servo.class, "rampServo1");
 
         // Import the intake motor (the grey rubber flaps) and set its mode + direction
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -52,6 +57,8 @@ public class BasicTeleop extends OpMode {
     @Override
     public void start() {
         stinger.setPosition(stingerTarget);
+        rampServo0.setPosition(rampTarget);
+        rampServo1.setPosition(rampTarget);
     }
 
     @Override

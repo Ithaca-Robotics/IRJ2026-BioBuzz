@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
-public class JustParkFromCorner extends OpMode {
+public class ParkFromLeftCorner extends OpMode {
 
     private Follower follower;
     private Servo stinger;
