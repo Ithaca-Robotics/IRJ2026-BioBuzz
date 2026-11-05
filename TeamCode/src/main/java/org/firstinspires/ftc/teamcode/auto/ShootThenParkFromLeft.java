@@ -34,7 +34,7 @@ public class ShootThenParkFromLeft extends OpMode {
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
     private ElapsedTime timer;
-    private final int waitTime = 15000;
+    private final int waitTime = 12000;
     private final int spinupTime = 3000;
     private final int launchTime = 10000;
     private int stage = 0;
@@ -125,9 +125,10 @@ public class ShootThenParkFromLeft extends OpMode {
             launchWheel.setPower(0.5f);
             motorIntakeOn = true;
             intakeMotor.setPower(1);
+            stage++;
         }
         telemetry.addData("completion: ", follower.completion());
-        if (stage > 1){
+        if (stage > 2){
             follower.update();
             Scheduler.execute();
         }
