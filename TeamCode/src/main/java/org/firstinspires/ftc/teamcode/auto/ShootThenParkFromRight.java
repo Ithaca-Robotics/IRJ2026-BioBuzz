@@ -37,15 +37,15 @@ public class ShootThenParkFromRight extends OpMode {
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
     private ElapsedTime timer;
-    private final int spinupTime = 2000;
+    private final int spinupTime = 3000;
     private final int launchTime = 12000;
     private int stage = 0;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
-            {142, 54, 0, -1},
-            {130, 40, 0, -1},
-            {130, 10, 180, -1},
-            {15, 2, 180, -1},
+            {129, 70, 0, -1},
+            {110, 40, 0, -1},
+            {90, 40, 180, -1},
+            {42, 25, 180, -1},
     };
 
     // our poses
@@ -64,8 +64,8 @@ public class ShootThenParkFromRight extends OpMode {
         // Basic servo imports
         stinger = hardwareMap.get(Servo.class, "stinger");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
-        rampServo0 = hardwareMap.get(Servo.class, "rampServo0");
-        rampServo1 = hardwareMap.get(Servo.class, "rampServo1");
+//        rampServo0 = hardwareMap.get(Servo.class, "rampServo0");
+//        rampServo1 = hardwareMap.get(Servo.class, "rampServo1");
 
         // Import the intake motor (the grey rubber flaps) and set its mode + direction
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");

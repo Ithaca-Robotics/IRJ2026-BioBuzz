@@ -34,8 +34,9 @@ public class ShootThenParkFromLeft extends OpMode {
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
     private ElapsedTime timer;
-    private final int spinupTime = 2000;
-    private final int launchTime = 12000;
+    private final int waitTime = 15000;
+    private final int spinupTime = 3000;
+    private final int launchTime = 10000;
     private int stage = 0;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
@@ -99,10 +100,6 @@ public class ShootThenParkFromLeft extends OpMode {
 //            schedule(follow(follower, park()));
 //        }
         schedule(autoRoutine());
-        launcherOn = true;
-        launchWheel.setPower(0.5f);
-        motorIntakeOn = true;
-        intakeMotor.setPower(1);
         timer = new ElapsedTime();
     }
 
@@ -111,7 +108,7 @@ public class ShootThenParkFromLeft extends OpMode {
 //        if (!follower.following() && poseIndex != poses.length){
 //            Scheduler.schedule(follow(follower, park()));
 //        }
-        if (stage == 1 && timer.milliseconds() > launchTime){
+        if (stage == 2 && timer.milliseconds() > waitTime + spinupTime + launchTime){
             servoIntakeOn = false;
             intakeServo.setPosition(0.5);
             launcherOn = false;
@@ -119,10 +116,15 @@ public class ShootThenParkFromLeft extends OpMode {
             motorIntakeOn = false;
             intakeMotor.setPower(0);
             stage++;
-        }else if (stage == 0 && timer.milliseconds() > spinupTime){
+        }else if (stage == 1 && timer.milliseconds() > waitTime + spinupTime){
             servoIntakeOn = true;
             intakeServo.setPosition(1);
             stage++;
+        }else if (stage == 0 && timer.milliseconds() > waitTime){
+            launcherOn = true;
+            launchWheel.setPower(0.5f);
+            motorIntakeOn = true;
+            intakeMotor.setPower(1);
         }
         telemetry.addData("completion: ", follower.completion());
         if (stage > 1){
