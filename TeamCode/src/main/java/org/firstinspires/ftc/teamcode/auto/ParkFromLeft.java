@@ -34,9 +34,9 @@ public class ParkFromLeft extends OpMode {
     private boolean launcherOn = false;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
-            {2, 54, 180, LibCommon.Actions.INIT.ordinal()},
+            {8, 58, 180, LibCommon.Actions.INIT.ordinal()},
             {27, 54, 180, -1},
-            {15, 2, 180, -1},
+            {20, 12, 180, -1},
     };
 
     private Pose[] poses;

@@ -120,15 +120,11 @@ public class BasicTeleop extends OpMode {
         // Enable / disable the intake motor by pressing 'x'
         if (gamepad2.xWasReleased()){
             motorIntakeOn = !motorIntakeOn;
-            if (motorIntakeOn){
-                // Continuous motors just need the power set once
-                intakeMotor.setPower(1);
-            }else{
-                intakeMotor.setPower(0);
-            }
         }
         if (motorIntakeOn && gamepad2.right_bumper){
             intakeMotor.setPower(-1);
+        }else if (motorIntakeOn){
+            intakeMotor.setPower(1);
         }else{
             intakeMotor.setPower(0);
         }

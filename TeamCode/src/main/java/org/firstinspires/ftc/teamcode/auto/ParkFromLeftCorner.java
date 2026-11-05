@@ -32,8 +32,8 @@ public class ParkFromLeftCorner extends OpMode {
     private boolean launcherOn = false;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
-            {2, 0, 180, -1},
-            {15, 2, 180, -1},
+            {8, 8, 180, -1},
+            {20, 12, 180, -1},
     };
 
     // our poses

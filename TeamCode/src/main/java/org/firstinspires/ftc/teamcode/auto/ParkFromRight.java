@@ -33,10 +33,10 @@ public class ParkFromRight extends OpMode {
     private boolean launcherOn = false;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
-            {142, 54, 0, -1},
-            {130, 40, 0, -1},
-            {130, 10, 180, -1},
-            {15, 2, 180, -1},
+            {136, 58, 0, -1},
+            {110, 36, 0, -1},
+            {90, 40, 180, -1},
+            {48, 12, 180, -1},
     };
 
     private Pose[] poses;

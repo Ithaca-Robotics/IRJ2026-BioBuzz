@@ -34,15 +34,15 @@ public class ShootThenParkFromLeft extends OpMode {
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
     private ElapsedTime timer;
-    private final int waitTime = 12000;
-    private final int spinupTime = 3000;
+    private final int waitTime = 10000;
+    private final int spinupTime = 5000;
     private final int launchTime = 10000;
     private int stage = 0;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
-            {2, 51, 180, LibCommon.Actions.INIT.ordinal()},
+            {8, 58, 180, LibCommon.Actions.INIT.ordinal()},
             {27, 54, 180, -1},
-            {15, 2, 180, -1},
+            {20, 12, 180, -1},
     };
 
     // our poses
