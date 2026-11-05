@@ -24,8 +24,8 @@ public abstract class BasicAuto extends OpMode {
     private Follower follower;
     private Servo stinger;
     private int stingerTarget = 0;
-    private Servo rampServo0;
-    private Servo rampServo1;
+    private Servo rampServoL;
+    private Servo rampServoR;
     private int rampTarget = 0;
     private Servo intakeServo;
     private DcMotor intakeMotor;
@@ -34,9 +34,9 @@ public abstract class BasicAuto extends OpMode {
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
     private final PoseFactory poseFactory = PoseFactory.degrees();
-    private ArrayList<int[]> movement;
+    private ArrayList<int[]> movement = new ArrayList<>();
     private int movementIndex = 0;
-    private ArrayList<Action> actions;
+    private ArrayList<Action> actions = new ArrayList<>();
     protected int actionIndex = 0;
     private Action currentAction;
     private int[] currentTarget;
@@ -77,8 +77,8 @@ public abstract class BasicAuto extends OpMode {
         // Basic servo imports
         stinger = hardwareMap.get(Servo.class, "stinger");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
-        rampServo0 = hardwareMap.get(Servo.class, "rampServo0");
-        rampServo1 = hardwareMap.get(Servo.class, "rampServo1");
+        rampServoL = hardwareMap.get(Servo.class, "rampServoL");
+        rampServoR = hardwareMap.get(Servo.class, "rampServoR");
 
         // Import the intake motor (the grey rubber flaps) and set its mode + direction
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -111,22 +111,26 @@ public abstract class BasicAuto extends OpMode {
         setActions();
         followerInit();
         opInit();
+        Scheduler.reset();
     }
 
     private Path generatePath() {
-        return line(poses[movementIndex], poses[movementIndex + 1]).linear(poses[movementIndex], poses[movementIndex++ + 1]);
+        return line(poses[movementIndex], poses[movementIndex + 1]).linear(poses[movementIndex], poses[movementIndex + 1]);
     }
 
     @Override
     public void start() {
         stinger.setPosition(stingerTarget);
-        rampServo0.setPosition(rampTarget);
-        rampServo1.setPosition(rampTarget);
+        rampServoL.setPosition(1.0f - rampTarget);
+        rampServoR.setPosition(rampTarget);
 
-        currentAction = actions.get(dualIndex);
+        currentAction = actions.get(dualIndex++);
         currentTarget = movement.get(dualIndex);
 
-        schedule(follow(follower, generatePath()));
+        if (currentTarget != null){
+            schedule(follow(follower, generatePath()));
+            movementIndex++;
+        }
 
         currentAction.init();
         currentAction.start();
@@ -134,22 +138,27 @@ public abstract class BasicAuto extends OpMode {
 
     @Override
     public void loop() {
-        if (follower.idle() && currentAction.isFinished()){
+        currentAction.update();
+        currentAction.loop();
+        follower.update();
+        Scheduler.execute();
+
+        if (follower.completion() > 0.975f && currentAction.isFinished()){
             currentAction.end();
 
-            dualIndex++;
-            currentAction = actions.get(dualIndex);
-            currentTarget = movement.get(dualIndex);
+            currentAction = actions.get(dualIndex++);
+            if (dualIndex < movement.size() - 1){
+                currentTarget = movement.get(dualIndex);
+            }
 
             currentAction.init();
             currentAction.start();
 
             if (currentTarget != null){
                 schedule(follow(follower, generatePath()));
+                movementIndex++;
             }
         } // TODO: Add break condition if something gets stuck
-
-        currentAction.loop();
 
         opLoop();
     }
