@@ -28,6 +28,9 @@ public class ParkFromRight extends OpMode {
     private Servo intakeServo;
     private DcMotor intakeMotor;
     private DcMotor launchWheel;
+    private Servo rampServoL;
+    private Servo rampServoR;
+    private int rampTarget = 0;
     private boolean servoIntakeOn = false;
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
@@ -47,6 +50,9 @@ public class ParkFromRight extends OpMode {
 
     @Override
     public void init() {
+        stinger = hardwareMap.get(Servo.class, "stinger");
+        rampServoL = hardwareMap.get(Servo.class, "rampServoL");
+        rampServoR = hardwareMap.get(Servo.class, "rampServoR");
         poses = new Pose[actions.length];
         for (int i = 0; i < actions.length; i++){
             poses[i] = poseFactory.of(actions[i][0], actions[i][1], actions[i][2]);
@@ -55,6 +61,9 @@ public class ParkFromRight extends OpMode {
         follower = Constants.create(hardwareMap);
         follower.setPose(poses[0]);
         follower.update();
+        stinger.setPosition(stingerTarget);
+        rampServoL.setPosition(1.0f - rampTarget);
+        rampServoR.setPosition(rampTarget);
     }
 
     private Command autoRoutine(){
@@ -67,9 +76,6 @@ public class ParkFromRight extends OpMode {
 
     @Override
     public void start() {
-//        for (int i = 0; i < poses.length - 1; i++) {
-//            schedule(follow(follower, park()));
-//        }
         schedule(autoRoutine());
     }
 

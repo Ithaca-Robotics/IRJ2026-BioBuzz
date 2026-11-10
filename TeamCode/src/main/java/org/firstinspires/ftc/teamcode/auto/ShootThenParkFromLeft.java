@@ -32,6 +32,9 @@ public class ShootThenParkFromLeft extends OpMode {
     private DcMotor launchWheel;
     private boolean servoIntakeOn = false;
     private boolean motorIntakeOn = false;
+    private Servo rampServoL;
+    private Servo rampServoR;
+    private int rampTarget = 0;
     private boolean launcherOn = false;
     private ElapsedTime timer;
     private final int waitTime = 13000;
@@ -59,6 +62,8 @@ public class ShootThenParkFromLeft extends OpMode {
     public void init() {
         stinger = hardwareMap.get(Servo.class, "stinger");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
+        rampServoL = hardwareMap.get(Servo.class, "rampServoL");
+        rampServoR = hardwareMap.get(Servo.class, "rampServoR");
 
         // Import the intake motor (the grey rubber flaps) and set its mode + direction
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -83,6 +88,9 @@ public class ShootThenParkFromLeft extends OpMode {
         follower = Constants.create(hardwareMap);
         follower.setPose(poses[0]);
         follower.update();
+        stinger.setPosition(stingerTarget);
+        rampServoL.setPosition(1.0f - rampTarget);
+        rampServoR.setPosition(rampTarget);
     }
 
     private Command autoRoutine(){

@@ -18,7 +18,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.LibCommon;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
@@ -27,8 +26,8 @@ public class ShootThenParkFromRight extends OpMode {
     private Follower follower;
     private Servo stinger;
     private int stingerTarget = 0;
-    private Servo rampServo0;
-    private Servo rampServo1;
+    private Servo rampServoL;
+    private Servo rampServoR;
     private int rampTarget = 0;
     private Servo intakeServo;
     private DcMotor intakeMotor;
@@ -43,8 +42,8 @@ public class ShootThenParkFromRight extends OpMode {
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
             {136, 58, 0, -1},
-            {110, 36, 0, -1},
-            {90, 36, 180, -1},
+            {120, 30, 0, -1},
+            {90, 30, 180, -1},
             {48, 12, 180, -1},
     };
 
@@ -60,8 +59,8 @@ public class ShootThenParkFromRight extends OpMode {
         // Basic servo imports
         stinger = hardwareMap.get(Servo.class, "stinger");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
-//        rampServo0 = hardwareMap.get(Servo.class, "rampServo0");
-//        rampServo1 = hardwareMap.get(Servo.class, "rampServo1");
+        rampServoL = hardwareMap.get(Servo.class, "rampServoL");
+        rampServoR = hardwareMap.get(Servo.class, "rampServoR");
 
         // Import the intake motor (the grey rubber flaps) and set its mode + direction
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -80,6 +79,9 @@ public class ShootThenParkFromRight extends OpMode {
         follower = Constants.create(hardwareMap);
         follower.setPose(poses[0]);
         follower.update();
+        stinger.setPosition(stingerTarget);
+        rampServoL.setPosition(1.0f - rampTarget);
+        rampServoR.setPosition(rampTarget);
     }
 
     private Command autoRoutine(){
@@ -95,14 +97,12 @@ public class ShootThenParkFromRight extends OpMode {
         schedule(autoRoutine());
         launcherOn = true;
         launchWheel.setPower(0.5f);
-        motorIntakeOn = true;
-        intakeMotor.setPower(1);
         timer = new ElapsedTime();
     }
 
     @Override
     public void loop() {
-        if (stage == 1 && timer.milliseconds() > launchTime){
+        if (stage == 1 && timer.milliseconds() > launchTime + spinupTime){
             servoIntakeOn = false;
             intakeServo.setPosition(0.5);
             launcherOn = false;
@@ -113,9 +113,13 @@ public class ShootThenParkFromRight extends OpMode {
         }else if (stage == 0 && timer.milliseconds() > spinupTime){
             servoIntakeOn = true;
             intakeServo.setPosition(1);
+            motorIntakeOn = true;
+            intakeMotor.setPower(1);
             stage++;
         }
         telemetry.addData("completion: ", follower.completion());
+        telemetry.addData("Heading: ", follower.pose().heading());
+        telemetry.update();
         if (stage > 1){
             follower.update();
             Scheduler.execute();
