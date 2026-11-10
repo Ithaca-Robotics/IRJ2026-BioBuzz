@@ -34,13 +34,12 @@ public class ShootThenParkFromLeft extends OpMode {
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
     private ElapsedTime timer;
-    private final int waitTime = 10000;
-    private final int spinupTime = 5000;
+    private final int waitTime = 13000;
     private final int launchTime = 10000;
     private int stage = 0;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final int[][] actions = new int[][]{
-            {8, 58, 180, LibCommon.Actions.INIT.ordinal()},
+            {8, 58, 180, -1},
             {27, 54, 180, -1},
             {20, 12, 180, -1},
     };
@@ -101,6 +100,8 @@ public class ShootThenParkFromLeft extends OpMode {
 //        }
         schedule(autoRoutine());
         timer = new ElapsedTime();
+        launcherOn = true;
+        launchWheel.setPower(0.5f);
     }
 
     @Override
@@ -108,7 +109,7 @@ public class ShootThenParkFromLeft extends OpMode {
 //        if (!follower.following() && poseIndex != poses.length){
 //            Scheduler.schedule(follow(follower, park()));
 //        }
-        if (stage == 2 && timer.milliseconds() > waitTime + spinupTime + launchTime){
+        if (stage == 1 && timer.milliseconds() > waitTime + launchTime){
             servoIntakeOn = false;
             intakeServo.setPosition(0.5);
             launcherOn = false;
@@ -116,19 +117,15 @@ public class ShootThenParkFromLeft extends OpMode {
             motorIntakeOn = false;
             intakeMotor.setPower(0);
             stage++;
-        }else if (stage == 1 && timer.milliseconds() > waitTime + spinupTime){
+        }else if (stage == 0 && timer.milliseconds() > waitTime){
             servoIntakeOn = true;
             intakeServo.setPosition(1);
-            stage++;
-        }else if (stage == 0 && timer.milliseconds() > waitTime){
-            launcherOn = true;
-            launchWheel.setPower(0.5f);
             motorIntakeOn = true;
             intakeMotor.setPower(1);
             stage++;
         }
         telemetry.addData("completion: ", follower.completion());
-        if (stage > 2){
+        if (stage > 1){
             follower.update();
             Scheduler.execute();
         }

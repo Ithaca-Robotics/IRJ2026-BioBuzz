@@ -37,7 +37,7 @@ public class ShootThenParkFromRight extends OpMode {
     private boolean motorIntakeOn = false;
     private boolean launcherOn = false;
     private ElapsedTime timer;
-    private final int spinupTime = 5000;
+    private final int spinupTime = 8000;
     private final int launchTime = 12000;
     private int stage = 0;
     private final PoseFactory poseFactory = PoseFactory.degrees();
@@ -50,11 +50,7 @@ public class ShootThenParkFromRight extends OpMode {
 
     // our poses
     private Pose[] poses;
-//    private final ArrayList<Pose> poses = new ArrayList<Pose>();
     private int poseIndex = 0;
-//    private final Pose startPose = poseFactory.of(2, 54, 180);
-//    private final Pose midPose = poseFactory.of(42, 54, 0);
-//    private final Pose park = poseFactory.of(27, 16, 0);
     private Path park() {
         return line(poses[poseIndex], poses[poseIndex + 1]).linear(poses[poseIndex], poses[poseIndex++ + 1]);
     }
