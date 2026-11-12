@@ -150,6 +150,10 @@ public class BasicTeleop extends OpMode {
             }
         }
 
+        if (gamepad2.left_stick_button && gamepad2.right_stick_button){
+            follower.setPose(starterPose);
+        }
+
         // PedroPathing movement using joysticks
         follower.manual(powers);
         follower.update();
