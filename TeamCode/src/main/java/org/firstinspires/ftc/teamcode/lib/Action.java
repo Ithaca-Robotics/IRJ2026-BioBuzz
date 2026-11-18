@@ -7,9 +7,11 @@ public abstract class Action {
     private double startTime;
     private ElapsedTime timer = new ElapsedTime();
     private double maxTime;
+    protected BasicAuto auto;
 
-    public Action(double time){
+    public Action(double time, BasicAuto parent){
         maxTime = time;
+        auto = parent;
     }
 
     public boolean isFinished(){

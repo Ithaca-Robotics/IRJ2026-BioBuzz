@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.lib.actions;
 
 import org.firstinspires.ftc.teamcode.lib.Action;
+import org.firstinspires.ftc.teamcode.lib.BasicAuto;
 
 public class SimpleWait extends Action {
 
-    public SimpleWait(float time) {
-        super(time);
+    public SimpleWait(float time, BasicAuto parent) {
+        super(time, parent);
     }
 
     @Override

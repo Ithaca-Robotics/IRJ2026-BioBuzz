@@ -10,7 +10,7 @@ public class ParkFromLeft extends BasicAuto {
     @Override
     protected void setActions() {
         createAction(new int[] {2, 54, 180});
-        createAction(new SimpleWait(15000));
+        createAction(new SimpleWait(15000, this));
         createAction(new int[] {27, 54, 180});
         createAction(new int[] {12, 2, 180});
     }

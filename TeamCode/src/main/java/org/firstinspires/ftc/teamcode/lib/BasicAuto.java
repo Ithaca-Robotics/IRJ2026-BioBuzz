@@ -56,7 +56,7 @@ public abstract class BasicAuto extends OpMode {
     }
     protected void createAction(int[] position){
         movement.add(position);
-        actions.add(new SimpleWait(0));
+        actions.add(new SimpleWait(0, this));
     }
     protected void createAction(Action action){
         movement.add(null);
@@ -101,7 +101,7 @@ public abstract class BasicAuto extends OpMode {
         }
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
-        follower.setPose(poses[0]);
+//        follower.setPose(poses[0]);
         follower.update();
     }
 
@@ -115,7 +115,7 @@ public abstract class BasicAuto extends OpMode {
     }
 
     private Path generatePath() {
-        return line(poses[movementIndex], poses[movementIndex + 1]).linear(poses[movementIndex], poses[movementIndex + 1]);
+        return line(poses[movementIndex], poses[movementIndex + 1]).linear(poses[movementIndex], poses[movementIndex++ + 1]);
     }
 
     @Override
@@ -124,13 +124,9 @@ public abstract class BasicAuto extends OpMode {
         rampServoL.setPosition(1.0f - rampTarget);
         rampServoR.setPosition(rampTarget);
 
-        currentAction = actions.get(dualIndex++);
+        currentAction = actions.get(dualIndex);
         currentTarget = movement.get(dualIndex);
-
-        if (currentTarget != null){
-            schedule(follow(follower, generatePath()));
-            movementIndex++;
-        }
+        dualIndex++;
 
         currentAction.init();
         currentAction.start();
@@ -146,17 +142,14 @@ public abstract class BasicAuto extends OpMode {
         if (follower.completion() > 0.975f && currentAction.isFinished()){
             currentAction.end();
 
-            currentAction = actions.get(dualIndex++);
-            if (dualIndex < movement.size() - 1){
-                currentTarget = movement.get(dualIndex);
-            }
+            currentAction = actions.get(dualIndex);
+            currentTarget = movement.get(dualIndex);
 
             currentAction.init();
             currentAction.start();
 
             if (currentTarget != null){
                 schedule(follow(follower, generatePath()));
-                movementIndex++;
             }
         } // TODO: Add break condition if something gets stuck
 
