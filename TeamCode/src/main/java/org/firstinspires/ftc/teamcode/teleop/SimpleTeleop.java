@@ -15,7 +15,7 @@ import com.pedropathing.follower.ManualDrive;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
-public class BasicTeleop extends OpMode {
+public class SimpleTeleop extends OpMode {
 
     private Follower follower;
     private Servo stinger;
