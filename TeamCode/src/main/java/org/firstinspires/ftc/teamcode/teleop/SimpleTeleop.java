@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static com.pedropathing.api.Paths.line;
-
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
-import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.ManualDrive;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class SimpleTeleop extends OpMode {
@@ -22,6 +20,9 @@ public class SimpleTeleop extends OpMode {
     private Follower follower;
     private Servo stinger;
     private int stingerTarget = 0;
+    private Servo rampServoL;
+    private Servo rampServoR;
+    private int rampTarget = 0;
     private Servo intakeServo;
     private DcMotor intakeMotor;
     private DcMotor launchWheel;
@@ -30,14 +31,9 @@ public class SimpleTeleop extends OpMode {
     private boolean launcherOn = false;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final Pose starterPose = poseFactory.of(0, 0, 180);
-    // our poses
-    private Pose[] poses;
-    //    private final ArrayList<Pose> poses = new ArrayList<Pose>();
-    private int poseIndex = 0;
-
-    private Path park() {
-        return line(poses[poseIndex], poses[poseIndex + 1]).linear(poses[poseIndex], poses[poseIndex++ + 1]);
-    }
+    private ElapsedTime timer;
+    private double raisedTime;
+    private double raisePause = 0.25;
 
     @Override
     public void init() {
@@ -48,6 +44,8 @@ public class SimpleTeleop extends OpMode {
         // Basic servo imports
         stinger = hardwareMap.get(Servo.class, "stinger");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
+        rampServoL = hardwareMap.get(Servo.class, "rampServoL");
+        rampServoR = hardwareMap.get(Servo.class, "rampServoR");
 
         // Import the intake motor (the grey rubber flaps) and set its mode + direction
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -58,11 +56,18 @@ public class SimpleTeleop extends OpMode {
         launchWheel = hardwareMap.get(DcMotor.class, "launchWheel");
         launchWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launchWheel.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        stinger.setPosition(stingerTarget);
+        rampServoL.setPosition(1.0f - rampTarget);
+        rampServoR.setPosition(rampTarget);
+
+        timer = new ElapsedTime();
+        raisedTime = timer.time();
     }
 
     @Override
     public void start() {
-        stinger.setPosition(stingerTarget);
+
     }
 
     @Override
@@ -90,22 +95,38 @@ public class SimpleTeleop extends OpMode {
         telemetry.update(); // This actually displays the text on the screen
 
         // Raise and lower the stinger based on pressing 'a'
-        if (gamepad2.aWasReleased()){
-            if (stingerTarget == 0) stingerTarget = 1;
-            else stingerTarget = 0;
+        if (gamepad2.aWasReleased() && rampTarget == 0){
+            if (stingerTarget == 0 && (timer.time() - raisedTime) > raisePause){
+                stingerTarget = 1;
+            }else if (stingerTarget == 1){
+                raisedTime = timer.time();
+                stingerTarget = 0;
+            }
         }
         // Non-continuous servo positions must be set every loop
         stinger.setPosition(stingerTarget);
 
+        if (gamepad2.dpadDownWasReleased() && stingerTarget == 0){
+            if (rampTarget == 0 && (timer.time() - raisedTime) > raisePause){
+                rampTarget = 1;
+            }else if (rampTarget == 1){
+                raisedTime = timer.time();
+                rampTarget = 0;
+            }
+        }
+        rampServoL.setPosition(1.0f - rampTarget);
+        rampServoR.setPosition(rampTarget);
+
         // Enable / disable the intake motor by pressing 'x'
         if (gamepad2.xWasReleased()){
             motorIntakeOn = !motorIntakeOn;
-            if (motorIntakeOn){
-                // Continuous motors just need the power set once
-                intakeMotor.setPower(1);
-            }else{
-                intakeMotor.setPower(0);
-            }
+        }
+        if (motorIntakeOn && gamepad2.right_bumper){
+            intakeMotor.setPower(-1);
+        }else if (motorIntakeOn){
+            intakeMotor.setPower(1);
+        }else{
+            intakeMotor.setPower(0);
         }
 
         // Enable / disable the intake servo by pressing 'b'
@@ -127,6 +148,10 @@ public class SimpleTeleop extends OpMode {
             }else{
                 launchWheel.setPower(0);
             }
+        }
+
+        if (gamepad2.left_stick_button && gamepad2.right_stick_button){
+            follower.setPose(starterPose);
         }
 
         // PedroPathing movement using joysticks
