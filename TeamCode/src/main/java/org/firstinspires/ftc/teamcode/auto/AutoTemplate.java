@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.lib.BasicAuto;
 
+// Uncomment once new auto is created
+// @Autonomous
 public class AutoTemplate extends BasicAuto {
     @Override
     protected void setActions() {

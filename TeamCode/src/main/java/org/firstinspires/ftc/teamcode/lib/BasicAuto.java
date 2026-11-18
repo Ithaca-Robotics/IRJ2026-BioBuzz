@@ -23,10 +23,10 @@ public abstract class BasicAuto extends OpMode {
 
     private Follower follower;
     private Servo stinger;
-    private int stingerTarget = 0;
+    private float stingerTarget = 0;
     private Servo rampServoL;
     private Servo rampServoR;
-    private int rampTarget = 0;
+    private float rampTarget = 0;
     private Servo intakeServo;
     private DcMotor intakeMotor;
     private DcMotor launchWheel;
@@ -101,8 +101,35 @@ public abstract class BasicAuto extends OpMode {
         }
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
-//        follower.setPose(poses[0]);
+        follower.setPose(poses[0]);
         follower.update();
+    }
+
+    public void setLauncherPower(float power){
+        launchWheel.setPower(0.5);
+        launcherOn = true;
+    }
+
+    public void setRampPosition(float position){
+        rampTarget = position;
+        rampServoL.setPosition(1.0f - rampTarget);
+        rampServoR.setPosition(rampTarget);
+    }
+
+    public void setStingerPosition(float position){
+        stingerTarget = position;
+        stinger.setPosition(stingerTarget);
+    }
+
+    public void setIntakePower(float power){
+        intakeMotor.setPower(power);
+        motorIntakeOn = power != 0;
+    }
+
+    public void setFiringStatus(boolean on){
+        if (on) intakeServo.setPosition(1);
+        else intakeServo.setPosition(0.5f);
+        servoIntakeOn = on;
     }
 
     @Override
@@ -120,9 +147,8 @@ public abstract class BasicAuto extends OpMode {
 
     @Override
     public void start() {
-        stinger.setPosition(stingerTarget);
-        rampServoL.setPosition(1.0f - rampTarget);
-        rampServoR.setPosition(rampTarget);
+        setStingerPosition(0.0f);
+        setRampPosition(0.0f);
 
         currentAction = actions.get(dualIndex);
         currentTarget = movement.get(dualIndex);
@@ -139,17 +165,25 @@ public abstract class BasicAuto extends OpMode {
         follower.update();
         Scheduler.execute();
 
+        telemetry.addData("Follower idle: ", follower.idle());
+        telemetry.addData("Follower completion: ", follower.completion());
+        telemetry.addData("Action finished: ", currentAction.isFinished());
+        telemetry.update();
+
         if (follower.completion() > 0.975f && currentAction.isFinished()){
             currentAction.end();
 
-            currentAction = actions.get(dualIndex);
-            currentTarget = movement.get(dualIndex);
+            if (dualIndex < actions.size()){
+                currentAction = actions.get(dualIndex);
+                currentTarget = movement.get(dualIndex);
+                dualIndex++;
 
-            currentAction.init();
-            currentAction.start();
+                currentAction.init();
+                currentAction.start();
 
-            if (currentTarget != null){
-                schedule(follow(follower, generatePath()));
+                if (currentTarget != null){
+                    schedule(follow(follower, generatePath()));
+                }
             }
         } // TODO: Add break condition if something gets stuck
 
