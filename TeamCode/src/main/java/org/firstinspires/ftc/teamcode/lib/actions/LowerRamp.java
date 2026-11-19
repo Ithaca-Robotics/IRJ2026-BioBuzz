@@ -10,7 +10,7 @@ public class LowerRamp extends Action {
 
     @Override
     public void start() {
-        auto.setRampPosition(1);
+        auto.setRampPosition(0.9f);
         auto.setIntakePower(1);
     }
 

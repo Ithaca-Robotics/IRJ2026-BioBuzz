@@ -37,6 +37,7 @@ public abstract class BasicAuto extends OpMode {
     private ArrayList<int[]> movement = new ArrayList<>();
     private int movementIndex = 0;
     private ArrayList<Action> actions = new ArrayList<>();
+    private ArrayList<Integer> timeouts = new ArrayList<>();
     protected int actionIndex = 0;
     private Action currentAction;
     private int[] currentTarget;
@@ -50,17 +51,20 @@ public abstract class BasicAuto extends OpMode {
      * Use this method to call createAction
      */
     protected abstract void setActions();
-    protected void createAction(int[] position, Action action){
+    protected void createAction(int[] position, Action action, int timeout){
         movement.add(position);
         actions.add(action);
+        timeouts.add(timeout);
     }
-    protected void createAction(int[] position){
+    protected void createAction(int[] position, int timeout){
         movement.add(position);
         actions.add(new SimpleWait(0, this));
+        timeouts.add(timeout);
     }
-    protected void createAction(Action action){
+    protected void createAction(Action action, int timeout){
         movement.add(null);
         actions.add(action);
+        timeouts.add(timeout);
     }
 
     /**
@@ -185,7 +189,23 @@ public abstract class BasicAuto extends OpMode {
                     schedule(follow(follower, generatePath()));
                 }
             }
-        } // TODO: Add break condition if something gets stuck
+        }else if (currentAction.time() > timeouts.get(dualIndex - 1)){
+            currentAction.end();
+
+            if (dualIndex < actions.size()){
+                currentAction = actions.get(dualIndex);
+                currentTarget = movement.get(dualIndex);
+                dualIndex++;
+
+                currentAction.init();
+                currentAction.start();
+
+                Scheduler.reset();
+                if (currentTarget != null){
+                    schedule(follow(follower, generatePath()));
+                }
+            }
+        }
 
         opLoop();
     }

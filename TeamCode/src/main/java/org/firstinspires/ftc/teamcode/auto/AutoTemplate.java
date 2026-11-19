@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.lib.BasicAuto;
 public class AutoTemplate extends BasicAuto {
     @Override
     protected void setActions() {
-        createAction(new int[] {0, 0, 0});
+        createAction(new int[] {0, 0, 0}, 1000);
     }
 
     @Override

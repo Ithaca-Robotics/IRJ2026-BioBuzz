@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.lib.actions.SimpleWait;
 public class ParkFromLeft extends BasicAuto {
     @Override
     protected void setActions() {
-        createAction(new int[] {8, 58, 180}, new SimpleWait(15000, this));
-        createAction(new int[] {27, 54, 180});
-        createAction(new int[] {20, 12, 180});
+        createAction(new int[] {8, 58, 180}, new SimpleWait(15000, this), 17000);
+        createAction(new int[] {27, 54, 180}, 10000);
+        createAction(new int[] {20, 12, 180}, 10000);
     }
 
     @Override

@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.lib.actions.SpinupLauncher;
 public class ShootThenParkFromRight extends BasicAuto {
     @Override
     protected void setActions() {
-        createAction(new int[] {136, 58, 0}, new SpinupLauncher(8000, this));
-        createAction(new FireInPlace(10000, this));
-        createAction(new SpindownLauncher(10, this));
-        createAction(new int[] {110, 26, 0});
-        createAction(new int[] {90, 40, 180});
-        createAction(new int[] {48, 12, 180});
+        createAction(new int[] {136, 58, 0}, new SpinupLauncher(9000, this), 10000);
+        createAction(new FireInPlace(8000, this), 9000);
+        createAction(new SpindownLauncher(10, this), 500);
+        createAction(new int[] {110, 26, 0}, 5000);
+        createAction(new int[] {90, 40, 180}, 5000);
+        createAction(new int[] {48, 12, 180}, 5000);
     }
 
     @Override

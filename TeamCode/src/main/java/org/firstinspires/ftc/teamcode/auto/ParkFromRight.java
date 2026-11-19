@@ -7,10 +7,10 @@ import org.firstinspires.ftc.teamcode.lib.BasicAuto;
 public class ParkFromRight extends BasicAuto {
     @Override
     protected void setActions() {
-        createAction(new int[] {136, 58, 0});
-        createAction(new int[] {110, 26, 0});
-        createAction(new int[] {90, 40, 180});
-        createAction(new int[] {48, 12, 180});
+        createAction(new int[] {136, 58, 0}, 10000);
+        createAction(new int[] {110, 26, 0}, 10000);
+        createAction(new int[] {90, 40, 180}, 10000);
+        createAction(new int[] {48, 12, 180}, 10000);
     }
 
     @Override
